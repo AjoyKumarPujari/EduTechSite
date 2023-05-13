@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const OTP = require("../models/OTP");
 const otpGenerator = require("../models/OTP");
+const bcrypt = require("bcrypt");
 
 //otp send
 exports.sendOTP = async (req,res) => {
@@ -64,6 +65,106 @@ exports.sendOTP = async (req,res) => {
 
 
 //signup
+
+exports.signUp = async (req,res) => {
+    try{
+         //data fetch from request body
+        const {
+            firstName,
+            lastName,
+            email,
+            password,
+            confirmPassword,
+            accountType,
+            contactNumber,
+            otp
+        } = req.body;
+    
+        //validate data
+        if(!firstName || !lastName || !email || !password || !confirmPassword || !accountType ||!contactNumber || !otp)
+        {
+            return res.status(403).json({
+                success:false,
+                message:"All fields are required",
+            })
+        }
+        //2 password match karloo(password and confirm password)
+        if(password !== confirmPassword){
+            return res.status(400).json({
+                success:false,
+                message:'Password and Confirm Password value doesnot Matched, Please Try again',
+            });
+        }
+    
+        ///checkuser already exist or not
+        const existingUser = await User.findOne({email});
+        if(existingUser) {
+            return res.status(400).json({
+                success:false,
+                message:"User is Already Ready Registered",
+            });
+        }
+    
+        ///find most recent OTP stored for the user
+        const recentOTP = await OTP.find({email}).sort({createdAt:-1}).limit(1);  //recent entry otp data fatch
+        console.log(recentOTP);
+    
+        //validate OTP
+        if(recentOTP.length == 0){
+            return res.status(400).json({
+                success:false,
+                message:"OTP Not Valid",
+            });
+        }else if (otp !== recentOTP){
+            //Invalid OTP 
+            return res.status(400).json({
+                success:false,
+                message:"OTP Not Match , pls try again",
+            });
+        }
+    
+        //hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+    
+        //entry create in DB 
+        //since profile is linked to User so it is needed to create first after the able to create User
+        const profileDetails = await Profile.create({
+            gender: null,
+            dateOfBirth: null,
+            about: null,
+            contactNumber: null,
+    
+        });
+        const user = await User.create({
+            firstName,
+            lastName,
+            email,
+            contactNumber,
+            password:hashedPassword,
+            accountType,
+            additionalDetails:profileDetails._id,
+            image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstname} ${lastName}`,
+        })
+        //return response 
+        return res.status(200).json({
+            success:true,
+            message: "User is regeistered Successfully",
+            user,
+        })
+    }
+   catch(error){
+    console.log(error);
+    return res.status(500).json({
+        success:false,
+        message:"User cannot be Regostered, please try again",
+    })
+   }
+
+
+
+
+}
+
 
 //login
 
