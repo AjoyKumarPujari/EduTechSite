@@ -218,9 +218,18 @@ exports.login = async(req, res) =>{
         console.log(error);
         return res.status(500).json({
         success:false,
-        message:"Login Failer, Please try Again",
+        message:"Login Failer, Please try Again ",
     })
      }
 };
 
 //changepassword
+exports.changepassword = async (req, res)=>{
+    //data get from req body
+    //get oldPassword , new Password, confirm Password
+    //validation
+
+    //update pwd in db
+    //send mail --password updated
+    //return response
+}
