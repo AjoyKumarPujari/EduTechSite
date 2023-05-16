@@ -69,7 +69,7 @@ exports.createCourse = async (req, res)=>{
             success:true,
             message:"Course Created Successfully",
             data:newCourse
-        });
+        });;
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -81,3 +81,22 @@ exports.createCourse = async (req, res)=>{
 }
 
 //fetch all course
+
+exports.showAllCourses=async(req, res) => {
+    try {
+        const allCourses = await Course.find({}, {courseName:true, price:true, thumbnail:true, instructor:true, ratingAndReviews:true, studentsEnrolled:true,}).populate("instructor").exec();
+        console.log(allCourses);
+        return res.status(200).json({
+            success:true,
+            message:"Data for all Courses fetch Successfully",
+           data:allCourses,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"Unable to Get Course Details",
+            error:error.message,
+        });
+    }
+}
