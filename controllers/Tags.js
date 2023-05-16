@@ -30,4 +30,23 @@ exports.createTag = async(req, res) => {
             message:error.message,
         });  
     }
+};
+//get All tags functions
+
+exports.showAlltags = async(req, res) => {
+    try {
+        const allTags = await Tag.find({},{ name:true, description:true});
+        console.log(allTags);
+        //return response
+        return res.status(200).json({
+            success:true,
+            message:"All tag Returns successfully",
+            allTags, //pass all tags in response
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:error.message,
+        }); 
+    }
 }
