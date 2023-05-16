@@ -62,7 +62,7 @@ try {
             });
         }
         //get userdetails from db by using token
-        const userDetails = await user.findOne({token:token});
+        const userDetails = await User.findOne({token:token});
         //if no entry-- invalid token
         if( !userDetails){
             return res.json({
