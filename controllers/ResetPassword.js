@@ -49,7 +49,7 @@ exports.resetPasswordToken = async (req, res) => {
 }
 
 //restPassword
-exports.resetPassword =async(req, res) => {
+exports.resetPassword = async(req, res) => {
 try {
         //data fetch
         const {password, confirmPassword, token} = req.body;
@@ -101,4 +101,4 @@ try {
 
 }
 
-//
+//forget password
