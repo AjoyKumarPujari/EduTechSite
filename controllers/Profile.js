@@ -74,7 +74,7 @@ const profile = require("../models/Profile");
     }
  }
 
- exports.getAllUserDetails = async(req, res){
+ exports.getAllUserDetails = async(req, res)=>{
     try {
         //fetch ID
         const id = req.user.id;
