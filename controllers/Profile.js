@@ -39,3 +39,37 @@ const profile = require("../models/Profile");
         });
     }
  }
+
+ //delete profile
+
+ exports.deleteProfile = async (req, res) => {
+    try {
+        //get ID
+        const id = req.user.id;
+        //validation
+        const userDetails = await User.findById(id);
+        if(!userDetails){
+            return res.status(400).json({
+                success:false,
+                message:"not a valid user",
+            });
+        }
+        //find by ID and Delete
+        await Profile.findByIdAndDelete({_id:userDetails.additionalDetails});
+        //delete user
+        await User.findByIdAndDelete({_id:id});
+        //TODO: Unrolled user from all rolled user
+        //response
+        return res.status(200).json({
+            success:true,
+            message:"Profile Deleted Successfully",
+            
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"user Cant be deleted",
+            error:error.message,
+        });
+    }
+ }
