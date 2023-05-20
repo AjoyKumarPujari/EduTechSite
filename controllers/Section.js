@@ -66,8 +66,8 @@ exports.updateSection = async (req, res) => {
             error:error.message,
         });
     }
-}
 
+}
 
 exports.deleteSection = async (req, res)=> {
     try {
@@ -90,3 +90,4 @@ exports.deleteSection = async (req, res)=> {
         });
     }
 }
+
