@@ -73,3 +73,25 @@ const profile = require("../models/Profile");
         });
     }
  }
+
+ exports.getAllUserDetails = async(req, res){
+    try {
+        //fetch ID
+        const id = req.user.id;
+        //get user detail
+        const userDetails = await User.findById(id).populate("additionalDetails").exact();
+        //return response
+        return res.status(200).json({
+            success:true,
+            message:"user data fetched",
+        });
+        
+        
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:"user data can't be  fetched",
+            error:error.message,
+        });
+    }
+ }
