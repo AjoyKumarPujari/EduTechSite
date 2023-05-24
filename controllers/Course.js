@@ -100,3 +100,52 @@ exports.showAllCourses=async(req, res) => {
         });
     }
 }
+
+
+//get all courses
+exports.getCourseDetails = async (req, res) => {
+    try {
+        //get ID
+        const {courseId} = req.body;
+        //find course details
+        const courseDetails = await Course.find(
+                                                {_id:courseId})
+                                                .populate(
+                                                    {
+                                                        path:"instructor",//get data which are used by referance
+                                                        populate:{
+                                                            path:"additionalDetails",
+                                                        }
+                                                    }
+                                                 )
+                                                .populate("category")
+                                                .populate("ratingsAndreviews")
+                                                .populate({
+                                                    path:"courseContent",
+                                                    populate:{
+                                                        path:"subsection",
+                                                    },
+                                                }) 
+                                                .exec();
+        //validation
+        if(!courseDetails){
+            return res.status(400).json({
+                success:false,
+                message:`Could Not Find the Course with ${courseId}`,
+                error:error.message,
+            });
+        }
+        //return response
+        return res.status(200).json({
+            success:true,
+            message:"Coursed Details Fetched Successfully",
+            data:courseDetails,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success:false,
+            message:error.message,
+        });
+    }
+}
