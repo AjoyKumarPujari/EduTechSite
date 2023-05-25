@@ -67,7 +67,7 @@ exports.getAverageRating = async (req, res) => {
         //get course ID
         const courseId = req.body.courseId;
         //calculate average rating
-        const result = await RatingAndReview.aggregate([   //course entries with same course ID
+        const result = await RatingAndReview.aggregate([ //return an array  //course entries with same course ID
             {
                 $match:{
                     course: new mongoose.Types.ObjectId(courseId),
@@ -85,7 +85,7 @@ exports.getAverageRating = async (req, res) => {
         if(result.length>0){
             return res.status(200).json({
                 success:true,
-                averageRating:result(0).averageRating,
+                averageRating:result[0].averageRating,
             });
         }
         //if no rating review exists then pass Zero
@@ -94,7 +94,7 @@ exports.getAverageRating = async (req, res) => {
             message:"Average rating 0, no ratings given till now",
             averageRating:0,
         });
-        //return response
+       
     } catch (error) {
         return res.status(500).json({
             success:false,
@@ -103,4 +103,34 @@ exports.getAverageRating = async (req, res) => {
     }
 }
 
-//get All rating
+//get All rating\
+exports.getAllRatings = async(req, res) => {
+    try {
+        const getAllRatingandReview = await RatingAndReview.find({})
+                                            .sort({rating: "desc"})
+                                            .populate({
+                                                path:"user",
+                                                select:"firstName lastName email image",
+
+                                            })
+                                            .populate({
+                                                path:"course",
+                                                select:"courseName",
+                                            })
+                                            .exec();
+            //return resoponnse
+            return res.status(200).json({
+                success:false,
+                message:"All reviews are send successfully",
+                data:allReviews,
+            });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success:false,
+            message:error.message,
+        });
+        
+    }
+}
