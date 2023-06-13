@@ -1,4 +1,4 @@
-const {instance} = require("../config/razorpay");
+const {instance} = require("../config/razorpay.js");
 const Course = require("../models/Course");
 const User = require("../models/User");
 const mailSender = require("../utils/mailSender");
@@ -89,8 +89,6 @@ exports.capturePayment=async(req, res) => {
     }
     
 };
-
-
 //authorization payment
 //varifysignature
 

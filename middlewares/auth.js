@@ -59,7 +59,7 @@ exports.isStudent = async (req, res, next) => {
 }
 
 //isinstructor
-exports.isStudent = async (req, res, next) => {
+exports.isInstructor = async (req, res, next) => {
     try {
         if(req.user.accountType !=="Instructor"){
             return res.status(401).json({
