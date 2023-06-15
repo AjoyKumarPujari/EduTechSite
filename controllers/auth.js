@@ -1,8 +1,11 @@
 const User = require("../models/User");
 const OTP = require("../models/OTP");
-const otpGenerator = require("../models/OTP");
+const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const mailSender = require("../utils/mailSender");
+const { passwordUpdated } = require("../mail/templates/passwordUpdate");
+const Profile = require("../models/Profile");
 require('dotenv').config;
 //otp send
 exports.sendOTP = async (req,res) => {
@@ -26,22 +29,24 @@ exports.sendOTP = async (req,res) => {
             lowerCaseAlphabets:false,
             specialChars:false,
         });
-        console.log("OTP GENERATE", otp);
+        
         //check unique otp or not
-        let result = await OTP.findOne({otp:otp});
+        const result = await OTP.findOne({ otp:otp });
+        console.log("Result", result);
+        console.log("Result is Generate OTP Func");
+		console.log("OTP", otp);
+		
         while(result){
-            otp = otpGenerator(6, {
-                upperCaseAlphabets:false,
-                lowerCaseAlphabets:false,
-                specialChars:false,
-            });
-            result = await OTP.findOne({otp:otp});
+            otp = otpGenerator.generate(6, {
+				upperCaseAlphabets: false,
+			});
         }
+        
         //make otp object 
-        const otpPayload = (email. otp );
+        const otpPayload = {email, otp };
         //Create an otp in DB
-        const otpBody = await OTP.create(otpPayLoad) ;
-
+        const otpBody = await OTP.create(otpPayload) ;
+        console.log("OTP body" ,otpBody);
         //return response successfully
         res.status(200).json({
             success:true,
@@ -51,7 +56,7 @@ exports.sendOTP = async (req,res) => {
 
     }
     catch(error){
-            console.log(error);
+            console.log(error.message);
             return res.status(500).json({
                 success:false,
                 message:error.message,
