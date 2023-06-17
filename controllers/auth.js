@@ -82,7 +82,7 @@ exports.signUp = async (req,res) => {
             contactNumber,
             otp
         } = req.body;
-    
+        console.log(otp);
         //validate data
         if(!firstName || !lastName || !email || !password || !confirmPassword || !accountType ||!contactNumber || !otp)
         {
@@ -113,12 +113,12 @@ exports.signUp = async (req,res) => {
         console.log(recentOTP);
     
         //validate OTP
-        if(recentOTP.length == 0){
+        if(recentOTP.length === 0){
             return res.status(400).json({
                 success:false,
                 message:"OTP Not Valid",
             });
-        }else if (otp !== recentOTP){
+        }else if (otp !== recentOTP[0].otp){
             //Invalid OTP 
             return res.status(400).json({
                 success:false,
@@ -146,7 +146,7 @@ exports.signUp = async (req,res) => {
             password:hashedPassword,
             accountType,
             additionalDetails:profileDetails._id,
-            image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstname} ${lastName}`,
+            image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
         })
         //return response 
         return res.status(200).json({
@@ -159,7 +159,7 @@ exports.signUp = async (req,res) => {
     console.log(error);
     return res.status(500).json({
         success:false,
-        message:"User cannot be Regostered, please try again",
+        message:"User cannot be Registered, please try again",
     })
    }
 };
