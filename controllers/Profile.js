@@ -1,5 +1,4 @@
  const Profile = require("../models/Profile");
-const profile = require("../models/Profile");
  const user = require("../models/User");
  const { uploadImageToCloudinary } = require("../utils/imageUploader");
  exports.updateProfile = async(req, res)=>{
@@ -75,26 +74,24 @@ const profile = require("../models/Profile");
  }
 
  exports.getAllUserDetails = async(req, res)=>{
-    try {
-        //fetch ID
-        const id = req.user.id;
-        //get user detail
-        const userDetails = await User.findById(id).populate("additionalDetails").exact();
-        //return response
-        return res.status(200).json({
-            success:true,
-            message:"user data fetched",
-        });
-        
-        
-    } catch (error) {
-        return res.status(500).json({
-            success:false,
-            message:"user data can't be  fetched",
-            error:error.message,
-        });
-    }
- }
+  try {
+		const id = req.user.id;
+		const userDetails = await user.findById(id)
+			.populate("additionalDetails")
+			.exec();
+		console.log(userDetails);
+		res.status(200).json({
+			success: true,
+			message: "User Data fetched successfully",
+			data: userDetails,
+		});
+	} catch (error) {
+		return res.status(500).json({
+			success: false,
+			message: error.message,
+		});
+	}
+ };
 
 
 exports.updateDisplayPicture = async (req, res) => {
