@@ -1,7 +1,7 @@
  const Profile = require("../models/Profile");
 const profile = require("../models/Profile");
  const user = require("../models/User");
-
+ const { uploadImageToCloudinary } = require("../utils/imageUploader");
  exports.updateProfile = async(req, res)=>{
     try {
         //get data 
@@ -108,7 +108,7 @@ exports.updateDisplayPicture = async (req, res) => {
         1000
       )
       console.log(image)
-      const updatedProfile = await User.findByIdAndUpdate(
+      const updatedProfile = await user.findByIdAndUpdate(
         { _id: userId },
         { image: image.secure_url },
         { new: true }
