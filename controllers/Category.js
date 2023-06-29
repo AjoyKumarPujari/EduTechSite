@@ -1,5 +1,7 @@
 const Category = require("../models/Category");
 
+
+//create category done testing with admin login 
 exports.createCategory = async (req, res) => {
 	try {
 		const { name, description } = req.body;
