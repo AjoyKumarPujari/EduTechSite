@@ -50,7 +50,7 @@ exports.resetPasswordToken = async (req, res) => {
     }
 }
 
-//restPassword
+//restPassword api done and tested
 exports.resetPassword = async(req, res) => {
 try {
         //data fetch
