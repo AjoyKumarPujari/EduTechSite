@@ -26,7 +26,7 @@ exports.createCategory = async (req, res) => {
 		});
 	}
 };
-
+//showAllCategories api tested successfully
 exports.showAllCategories = async (req, res) => {
 	try {
 		const allCategorys = await Category.find(
