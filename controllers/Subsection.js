@@ -1,4 +1,4 @@
-const Subsection =require("../models/Subsection");
+const SubSection =require("../models/Subsection");
 const Section = require("../models/Section"); 
 const {uploadImageToCloudinary} = require("../utils/imageUploader"); 
 //create subsection logic 
